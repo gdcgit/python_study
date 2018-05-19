@@ -3,11 +3,12 @@
 import os
 import zipfile
 import time
+import pymysql
 # python 打包压缩文件
 
 
 def begin_fun():
-    g = os.walk("此处为要打包的文件所在的路径")
+    g = os.walk("C:\\Users\\高笛淳\\Desktop\\标定原始数据\\GC原始数据\\20180320\\6890")
     stand_port_list = ["1", "4", "6", "9", "12", "15"]
 
     injection_date = ''
@@ -61,7 +62,9 @@ def begin_fun():
                 # print(port)
                 # print(sampletype)
                 # path 要压缩的文件夹路径
-                file_news = "D:\\"+"GC_"+calibration_number+"_"+bottle_number+"_"+calibration_start_time+"_"+calibration_end_time+'_'+device_type+"_"+injection_date+"_"+port+"_"+sampletype+".zip"  # 压缩后文件夹的名字
+                package_name = "GC_"+calibration_number+"_"+bottle_number+"_"+calibration_start_time+"_"+calibration_end_time+'_'+device_type+"_"+injection_date+"_"+port+"_"+sampletype+".zip"  # 压缩后文件夹的名字
+                update_download(package_name)
+                file_news = "D:\\weather\\calibration\\gc\\" + package_name
                 z = zipfile.ZipFile(file_news, 'w', zipfile.ZIP_DEFLATED)
                 for dirpath, dirnames, filenames in os.walk(path):
                     fpath = dirpath.replace(path, '')  # 这一句很重要，不replace的话，就从根目录开始复制
@@ -101,6 +104,18 @@ def get_injection_date(date, time, sign):
                 s_hour = timelist[0]
         s_time = s_hour+timelist[1]+timelist[2]
     return s_date+s_time
+
+
+def update_download(package_name):
+    conn = pymysql.connect('localhost', 'root', '123qwe', 'db_weather')
+    cursor = conn.cursor()
+    sql = "insert into download_upload_file (`package_name`, `status`, `err`, `commit_time`, `system_type`, `file_transfe`, `system_user`) values ('"+package_name+"', 0, 0, CURRENT_TIMESTAMP, 'calibration_gc', 2, 'system')"
+    try:
+        cursor.execute(sql)
+        conn.commit()
+    except:
+        conn.rollback()
+    conn.close()
 
 
 if __name__ == '__main__':
