@@ -8,7 +8,7 @@ import pymysql
 
 
 def begin_fun():
-    g = os.walk("C:\\Users\\高笛淳\\Desktop\\标定原始数据\\GC原始数据\\20180320\\6890")
+    g = os.walk("C:\\Users\\高笛淳\\Desktop\\标定原始数据\\GC原始数据\\20180323\\6890")
     stand_port_list = ["1", "4", "6", "9", "12", "15"]
 
     injection_date = ''
